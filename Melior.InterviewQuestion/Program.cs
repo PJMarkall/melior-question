@@ -1,5 +1,8 @@
 ﻿using Melior.InterviewQuestion.Data;
 using Melior.InterviewQuestion.Services;
+using Melior.InterviewQuestion.Types;
+using Melior.InterviewQuestion.Types.PaymentSchemeRules;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace Melior.InterviewQuestion
@@ -11,7 +14,14 @@ namespace Melior.InterviewQuestion
             string dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
             IAccountDataStore accountDataStore = AccountDataStoreFactory.GetAccountDataStore(dataStoreType);
 
-            PaymentService paymentService = new PaymentService(accountDataStore);
+            IDictionary<PaymentScheme, IPaymentSchemeRules> paymentSchemes = new Dictionary<PaymentScheme, IPaymentSchemeRules>()
+            {
+                { PaymentScheme.Bacs, new BacsPaymentSchemeRules() },
+                { PaymentScheme.FasterPayments, new FasterPaymentsPaymentSchemeRules() },
+                { PaymentScheme.Chaps, new ChapsPaymentSchemeRules() }
+            };
+
+            PaymentService paymentService = new PaymentService(accountDataStore, paymentSchemes);
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Melior.InterviewQuestion.Types.PaymentSchemes
+﻿namespace Melior.InterviewQuestion.Types.PaymentSchemeRules
 {
-    public class ChapsPaymentScheme : IPaymentScheme
+    public class ChapsPaymentSchemeRules : IPaymentSchemeRules
     {
         public bool IsValidForPayment(Account account, MakePaymentRequest request)
         {

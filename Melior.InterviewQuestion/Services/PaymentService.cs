@@ -1,16 +1,19 @@
 ﻿using Melior.InterviewQuestion.Data;
 using Melior.InterviewQuestion.Types;
-using Melior.InterviewQuestion.Types.PaymentSchemes;
+using Melior.InterviewQuestion.Types.PaymentSchemeRules;
+using System.Collections.Generic;
 
 namespace Melior.InterviewQuestion.Services
 {
     public class PaymentService : IPaymentService
     {
         private readonly IAccountDataStore _accountDataStore;
+        private readonly IDictionary<PaymentScheme, IPaymentSchemeRules> _paymentSchemeRules;
 
-        public PaymentService(IAccountDataStore accountDataStore)
+        public PaymentService(IAccountDataStore accountDataStore, IDictionary<PaymentScheme, IPaymentSchemeRules> paymentSchemeRules)
         {
             _accountDataStore = accountDataStore;
+            _paymentSchemeRules = paymentSchemeRules;
         }
 
         public MakePaymentResult MakePayment(MakePaymentRequest request)
@@ -24,7 +27,8 @@ namespace Melior.InterviewQuestion.Services
                 return makePaymentResult;
             }
 
-            makePaymentResult.Success = CheckPaymentIsValidForScheme(account, request);
+            IPaymentSchemeRules rules = _paymentSchemeRules[request.PaymentScheme];
+            makePaymentResult.Success = rules.IsValidForPayment(account, request);
 
             if (makePaymentResult.Success)
             {
@@ -33,13 +37,6 @@ namespace Melior.InterviewQuestion.Services
             }
 
             return makePaymentResult;
-        }
-
-        public bool CheckPaymentIsValidForScheme(Account account, MakePaymentRequest request)
-        {
-            IPaymentScheme paymentScheme = PaymentSchemeFactory.GetPaymentScheme(request.PaymentScheme);
-            
-            return paymentScheme.IsValidForPayment(account, request);
         }
     }
 }

@@ -1,19 +1,19 @@
 ﻿using Melior.InterviewQuestion.Types;
-using Melior.InterviewQuestion.Types.PaymentSchemes;
+using Melior.InterviewQuestion.Types.PaymentSchemeRules;
 using System;
 using Xunit;
 
-namespace Melior.InterviewQuestionTests
+namespace Melior.InterviewQuestionTests.PaymentSchemeRules
 {
-    public class ChapsPaymentSchemeTests
+    public class FasterPaymentsPaymentSchemeRulesTests
     {
         private MakePaymentRequest makePaymentRequest = new MakePaymentRequest()
         {
             CreditorAccountNumber = "123",
             DebtorAccountNumber = "456",
-            Amount = 1.5m,
+            Amount = 5m,
             PaymentDate = DateTime.Now,
-            PaymentScheme = PaymentScheme.Chaps
+            PaymentScheme = PaymentScheme.FasterPayments
         };
 
         [Fact]
@@ -24,11 +24,11 @@ namespace Melior.InterviewQuestionTests
                 AccountNumber = "456",
                 Balance = 10m,
                 Status = AccountStatus.Live,
-                AllowedPaymentSchemes = AllowedPaymentSchemes.Chaps
+                AllowedPaymentSchemes = AllowedPaymentSchemes.FasterPayments
             };
-            var chapsPaymentScheme = new ChapsPaymentScheme();
+            var fasterPaymentsPaymentScheme = new FasterPaymentsPaymentSchemeRules();
 
-            bool result = chapsPaymentScheme.IsValidForPayment(account, makePaymentRequest);
+            bool result = fasterPaymentsPaymentScheme.IsValidForPayment(account, makePaymentRequest);
 
             Assert.True(result);
         }
@@ -41,28 +41,28 @@ namespace Melior.InterviewQuestionTests
                 AccountNumber = "456",
                 Balance = 10m,
                 Status = AccountStatus.Live,
-                AllowedPaymentSchemes = AllowedPaymentSchemes.FasterPayments
+                AllowedPaymentSchemes = AllowedPaymentSchemes.Bacs
             };
-            var chapsPaymentScheme = new ChapsPaymentScheme();
+            var fasterPaymentsPaymentScheme = new FasterPaymentsPaymentSchemeRules();
 
-            bool result = chapsPaymentScheme.IsValidForPayment(account, makePaymentRequest);
+            bool result = fasterPaymentsPaymentScheme.IsValidForPayment(account, makePaymentRequest);
 
             Assert.False(result);
         }
 
         [Fact]
-        public void GivenAccountNotLive_IsValidForPaymentReturnsFalse()
+        public void GivenInsufficientBalance_IsValidForPaymentReturnsFalse()
         {
             var account = new Account()
             {
                 AccountNumber = "456",
-                Balance = 10m,
+                Balance = 2m,
                 Status = AccountStatus.InboundPaymentsOnly,
                 AllowedPaymentSchemes = AllowedPaymentSchemes.Chaps
             };
-            var chapsPaymentScheme = new ChapsPaymentScheme();
+            var fasterPaymentsPaymentScheme = new FasterPaymentsPaymentSchemeRules();
 
-            bool result = chapsPaymentScheme.IsValidForPayment(account, makePaymentRequest);
+            bool result = fasterPaymentsPaymentScheme.IsValidForPayment(account, makePaymentRequest);
 
             Assert.False(result);
         }

@@ -1,11 +1,11 @@
 ﻿using Melior.InterviewQuestion.Types;
-using Melior.InterviewQuestion.Types.PaymentSchemes;
+using Melior.InterviewQuestion.Types.PaymentSchemeRules;
 using System;
 using Xunit;
 
-namespace Melior.InterviewQuestionTests
+namespace Melior.InterviewQuestionTests.PaymentSchemeRules
 {
-    public class BacsPaymentSchemeTests
+    public class BacsPaymentSchemeRulesTests
     {
         private MakePaymentRequest makePaymentRequest = new MakePaymentRequest()
         {
@@ -26,7 +26,7 @@ namespace Melior.InterviewQuestionTests
                 Status = AccountStatus.Live,
                 AllowedPaymentSchemes = AllowedPaymentSchemes.Bacs
             };
-            var bacsPaymentScheme = new BacsPaymentScheme();
+            var bacsPaymentScheme = new BacsPaymentSchemeRules();
 
             bool result = bacsPaymentScheme.IsValidForPayment(account, makePaymentRequest);
 
@@ -43,7 +43,7 @@ namespace Melior.InterviewQuestionTests
                 Status = AccountStatus.Live,
                 AllowedPaymentSchemes = AllowedPaymentSchemes.FasterPayments
             };
-            var bacsPaymentScheme = new BacsPaymentScheme();
+            var bacsPaymentScheme = new BacsPaymentSchemeRules();
 
             bool result = bacsPaymentScheme.IsValidForPayment(account, makePaymentRequest);
 
